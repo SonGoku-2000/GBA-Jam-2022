@@ -5,11 +5,18 @@
 #include "bn_compare.h"
 #include "bn_fixed_point.h"
 #include "bn_sprite_ptr.h"
+#include "bn_camera_ptr.h"
+#include "bn_sprite_animate_actions.h"
 #include "bn_affine_bg_ptr.h"
+#include "bn_span.h"
+#include "bn_affine_bg_map_cell.h"
+
+#include "fe_enemy.h"
+#include "hitbox.hpp"
 
 class Jugador {
     private:
-        bn::sprite_ptr _sprite;// = bn::sprite_items::pirata1.create_sprite(0, 0);
+        bn::sprite_ptr _sprite;
         bn::fixed _dx;
         bn::fixed _dy;  
         bn::fixed_point _pos;
@@ -24,6 +31,19 @@ class Jugador {
         bool _wall_jumped = false;
         bool _already_running = false;
         bool _attacking = false;
+        bn::span<const bn::affine_bg_map_cell> _map_cells;
+        bn::affine_bg_ptr _map;
+        bn::vector<Enemy, 32>* _enemies;
+
+        fe::Hitbox _hitbox_fall = Hitbox(0, 4, 4, 0);
+        fe::Hitbox _hitbox_left = Hitbox(-2, 0, 2, 4);
+        fe::Hitbox _hitbox_right = Hitbox(2, 0, 2, 4);
+        fe::Hitbox _hitbox_jump = Hitbox(0, 2, 4, 2);
+        /*bn::sprite_animate_action<10> _action = bn::create_sprite_animate_action_forever(
+            _sprite, 6, bn::sprite_items::cat_sprite.tiles_item(), 0, 1, 0, 1, 0, 1, 0, 1, 0, 1);
+        */
+        void _update_camera(int lerp);
+
     public:
         Jugador();
         void moverIzquierda();

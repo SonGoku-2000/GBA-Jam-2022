@@ -20,6 +20,7 @@ Jugador::Jugador()
     _pos.set_x(0);
     _pos.set_y(0);
 }
+
 void Jugador::moverDerecha() {
     _sprite.set_horizontal_flip(false);
     _dx += acc;
@@ -34,6 +35,31 @@ void Jugador::moverIzquierda() {
     _sliding = false;
 }
 
+void Jugador::_update_camera(int lerp) {
+    // update camera
+    if (_pos.x() < 122 + 30) {
+        _camera.set_x(_camera.x() + (122 - _camera.x()) / lerp);
+    }
+    else if (_pos.x() > 922 - 30) {
+        _camera.set_x(_camera.x() + (922 - 20 - _camera.x()) / lerp);
+    }
+    else
+    {
+        if (_sprite.horizontal_flip()) {
+            _camera.set_x(_camera.x() + (_pos.x() - 30 - _camera.x() + _dx * 8) / lerp);
+        }
+        else {
+            _camera.set_x(_camera.x() + (_pos.x() + 30 - _camera.x() + _dx * 8) / lerp);
+        }
+    }
+
+    if (_pos.y() < 942) {
+        _camera.set_y(_camera.y() + (_pos.y() - 10 - _camera.y()) / lerp);
+    }
+    else {
+        _camera.set_y(_camera.y() + (942 - _camera.y()) / lerp);
+    }
+}
 
 void Jugador::update_position(/*bn::affine_bg_ptr map, fe::Level level*/) {
     //_update_camera(10);
@@ -113,3 +139,4 @@ void Jugador::update_position(/*bn::affine_bg_ptr map, fe::Level level*/) {
     _sprite.set_y(_pos.y());
 
 }
+
