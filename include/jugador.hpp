@@ -5,12 +5,11 @@
 #include "bn_compare.h"
 #include "bn_fixed_point.h"
 #include "bn_sprite_ptr.h"
-#include "bn_sprite_items_pirata1.h"
 #include "bn_affine_bg_ptr.h"
 
 class Jugador {
     private:
-        bn::sprite_ptr _sprite = bn::sprite_items::pirata1.create_sprite(0, 0);
+        bn::sprite_ptr _sprite;// = bn::sprite_items::pirata1.create_sprite(0, 0);
         bn::fixed _dx;
         bn::fixed _dy;  
         bn::fixed_point _pos;

@@ -8,7 +8,7 @@
 
 namespace fe {
 
-    class Hitbox {
+    class Hitbox : public bn::fixed_rect {
         
         private:
             bn::fixed_point _pos;
@@ -18,7 +18,6 @@ namespace fe {
         public:
             Hitbox();
             Hitbox(bn::fixed x, bn::fixed y, bn::fixed width, bn::fixed height);
-
             bn::fixed x();
             bn::fixed y();
             bn::fixed width();

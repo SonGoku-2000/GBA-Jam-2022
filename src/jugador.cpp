@@ -4,6 +4,9 @@
 #include "bn_fixed_point.h"
 #include "bn_keypad.h"
 #include "bn_math.h"
+#include "bn_sprites.h"
+
+#include "bn_sprite_items_pirata1.h"
 
 constexpr const bn::fixed gravity = 0.2;
 constexpr const bn::fixed wall_run_speed = 0.25;
@@ -12,7 +15,8 @@ constexpr const bn::fixed acc = 0.4;
 constexpr const bn::fixed max_dy = 6;
 constexpr const bn::fixed friction = 0.85;
 
-Jugador::Jugador() {
+Jugador::Jugador() 
+    : _sprite(bn::sprite_items::pirata1.create_sprite(0, 0)) {
     _pos.set_x(0);
     _pos.set_y(0);
 }
