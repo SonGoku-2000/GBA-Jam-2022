@@ -1,4 +1,5 @@
 #include "bn_core.h"
+#include "bn_compare.h"
 
 int main() {
     bn::core::init();
