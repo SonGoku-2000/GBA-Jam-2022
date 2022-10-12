@@ -13,8 +13,58 @@
 #include "bn_span.h"
 #include "bn_log.h"
 
+#include "hitbox.hpp"
+
+#include "fe_extras.h"
+
 #include "bn_sprite_items_pirata1.h"
 #include "bn_affine_bg_items_mapa.h"
+
+
+enum directions { up, down, left, right };
+
+[[nodiscard]] int get_map_cell(bn::fixed x, bn::fixed y, bn::affine_bg_ptr& map, bn::span<const bn::affine_bg_map_cell> cells) {
+    int map_size = map.dimensions().width();
+    int cell = fe::modulo((y.safe_division(8).right_shift_integer() * map_size / 8 + x / 8), map_size * 8).integer();
+    return cells.at(cell);
+}
+
+[[nodiscard]] bool contains_cell(int tile, bn::vector<int, 32> tiles) {
+    for (int index = 0; index < tiles.size(); ++index) {
+        if (tiles.at(index) == tile) {
+            return true;
+        }
+    }
+    return false;
+}
+
+[[nodiscard]] bool check_collisions_map(bn::fixed_point pos, directions direction, fe::Hitbox hitbox, bn::affine_bg_ptr& map, fe::Level level, bn::span<const bn::affine_bg_map_cell> cells) {
+    bn::fixed l = pos.x() / 2 - hitbox.width() / 2 + hitbox.x();
+    bn::fixed r = pos.x() / 2 + hitbox.width() / 2 + hitbox.x();
+    bn::fixed u = pos.y() / 2 - hitbox.height() / 2 + hitbox.y();
+    bn::fixed d = pos.y() / 2 + hitbox.height() / 2 + hitbox.y();
+
+    bn::vector<int, 32> tiles;
+    if (direction == down) {
+        tiles = level.floor_tiles();
+    }
+    else if (direction == left || direction == right) {
+        tiles = level.wall_tiles();
+    }
+    else if (direction == up) {
+        tiles = level.ceil_tiles();
+    }
+
+    if (contains_cell(get_map_cell(l, u, map, cells), tiles) ||
+        contains_cell(get_map_cell(l, d, map, cells), tiles) ||
+        contains_cell(get_map_cell(r, u, map, cells), tiles) ||
+        contains_cell(get_map_cell(l, d, map, cells), tiles)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 
 constexpr const bn::fixed gravity = 0.2;
 constexpr const bn::fixed wall_run_speed = 0.25;
@@ -30,6 +80,8 @@ Jugador::Jugador() :
     _map.set_visible(false);
     _pos.set_x(0);
     _pos.set_y(0);
+    _hitbox_fall.set_y(4);
+    //_hitbox_fall.set_height(16);
 }
 
 void Jugador::moverDerecha() {
@@ -72,8 +124,76 @@ void Jugador::_update_camera(int lerp) {
     }
 }
 
+void Jugador::collide_with_objects(bn::affine_bg_ptr map, fe::Level level) {
+    // if falling
+    if (_dy > 0) {
+        _falling = true;
+
+        /*if (!_wall_running) {
+            _falling = true;
+        }
+        else {
+            _falling = false;
+        }*/
+        _grounded = false;
+        _jumping = false;
+
+        // clamp max fall speed
+        if (_dy > max_dy) {
+            _dy = max_dy;
+        }
+
+        if (check_collisions_map(_pos, down, _hitbox_fall, map, level, _map_cells)) {
+            _grounded = true;
+            //_wall_jumped = false;
+            //_wall_running = false;
+            _falling = false;
+            _dy = 0;
+            _pos.set_y(_pos.y() - fe::modulo(_pos.y() + 8, 16));
+            //todo if they pressed jump a few milliseconds before hitting the ground then jump now
+        }
+    }
+    else if (_dy < 0) // jumping
+    {
+        _jumping = false;
+
+        /*if (!_wall_running) {
+            _jumping = true;
+        }
+        else {
+            _jumping = false;
+        }*/
+
+        if (check_collisions_map(_pos, up, _hitbox_jump, map, level, _map_cells)) {
+            _dy = 0;
+            //_wall_running = false;
+        }
+    }
+
+    if (_dx > 0) // moving right
+    {
+        if (check_collisions_map(_pos, right, _hitbox_right, map, level, _map_cells)) {
+            _dx = 0;
+
+        }
+    }
+    else if (_dx < 0) // moving left
+    {
+        if (check_collisions_map(_pos, left, _hitbox_left, map, level, _map_cells)) {
+            _dx = 0;
+        }
+    }
+}
+
+void Jugador::jump() {
+    if (_grounded) {
+        _dy -= jump_power;
+        _grounded = false;
+    }
+}
+
 void Jugador::update_position(bn::affine_bg_ptr map, fe::Level level) {
-    //_update_camera(10);
+    _update_camera(10);
 
     // apply friction
     _dx = _dx * friction;
@@ -100,6 +220,10 @@ void Jugador::update_position(bn::affine_bg_ptr map, fe::Level level) {
         if (bn::abs(_dx) < 0.1 || _running) {
             _sliding = false;
         }
+    }
+
+    if (bn::keypad::a_pressed()) {
+        jump();
     }
     /*
     if (bn::keypad::up_held()) {
@@ -131,27 +255,27 @@ void Jugador::update_position(bn::affine_bg_ptr map, fe::Level level) {
             //check_attack();
 
             // collide
-         //   collide_with_objects(map, level);
+            collide_with_objects(map, level);
 
             // update position
     _pos.set_x(_pos.x() + _dx);
     _pos.set_y(_pos.y() + _dy);
 
-    // lock player position to map limits x
+    /*// lock player position to map limits x
     if (_pos.x() > 1016) {
         _pos.set_x(1016);
     }
     else if (_pos.x() < 4) {
         _pos.set_x(4);
     }
-
+*/
     // update sprite position
     _sprite.set_x(_pos.x());
     _sprite.set_y(_pos.y());
 
 }
 
-
+/*
 void Jugador::update_position() {
     _update_camera(10);
 
@@ -181,7 +305,7 @@ void Jugador::update_position() {
             _sliding = false;
         }
     }
-    /*
+    
     if (bn::keypad::up_held()) {
         if (_dy > 0 && bn::abs(_dx) > 1 && !_wall_jumped && _can_wallrun) {
             _wall_running = true;
@@ -191,22 +315,22 @@ void Jugador::update_position() {
     }
     else {
         _wall_running = false;
-    }*/
-    /*
+    }
+    
         if (_listening) {
             _text_bg1.set_position(_camera.x() + 64 + 8, _camera.y() + 40 + 24);
             _text_bg2.set_position(_camera.x() - 64 + 8, _camera.y() + 40 + 24);
-        }*/
+        }
 
         // jump
-        /*if (bn::keypad::a_pressed()) {
+        if (bn::keypad::a_pressed()) {
             jump();
-        }*/
-        /*
+        }
+        
             // attack
             if (bn::keypad::b_pressed()) {
                 attack();
-            }*/
+            }
 
             //check_attack();
 
@@ -230,6 +354,7 @@ void Jugador::update_position() {
     _sprite.set_y(_pos.y());
 
 }
+*/
 
 void Jugador::spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map, bn::vector<fe::Enemy, 32>& enemies) {
     _pos = pos;
@@ -256,22 +381,15 @@ void Jugador::reset() {
     _sprite.set_camera(_camera);
     _sprite.set_bg_priority(0);
     _sprite.put_above();
-    //_text_bg1.set_camera(_camera);
-    //_text_bg2.set_camera(_camera);
     _update_camera(1);
     _dy = 0;
     _dy = 0;
     _jumping = false;
     _falling = false;
     _running = false;
-    //_listening = false;
     _grounded = false;
     _sliding = false;
-    //_wall_running = false;
-    //_wall_jumped = false;
     _already_running = false;
     _attacking = false;
-
-    //_can_wallrun = false;
 }
 

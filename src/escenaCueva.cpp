@@ -25,8 +25,8 @@
 #include "bn_affine_bg_items_mapa.h"
 
 
-namespace {
-    Escenas House::execute(Jugador player, bn::fixed_point spawn_location) {
+namespace p {
+    Escenas Cueva::execute(Jugador player, bn::fixed_point spawn_location) {
 
         bn::camera_ptr camera = bn::camera_ptr::create(spawn_location.x(), spawn_location.y());
 
@@ -35,7 +35,7 @@ namespace {
 
         // map
         //bn::regular_bg_ptr map_bg = bn::regular_bg_items::house_bg.create_bg(512, 512);
-        bn::affine_bg_ptr map = bn::affine_bg_items::mapa.create_bg(128, 128);
+        bn::affine_bg_ptr map = bn::affine_bg_items::mapa.create_bg(512, 512);
         //map_bg.set_priority(2);
         map.set_priority(1);
         fe::Level level = fe::Level(map);
@@ -48,7 +48,7 @@ namespace {
 
         // bn::fixed max_cpu_usage;
         // int counter = 1;
-        //bn::vector<Enemy, 32> enemies = {};
+        bn::vector<fe::Enemy, 32> enemies = {};
 
         // player
         //player.spawn(spawn_location, camera, map, enemies);

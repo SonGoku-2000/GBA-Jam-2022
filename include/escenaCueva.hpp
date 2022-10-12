@@ -7,7 +7,7 @@
 #include "jugador.hpp"
 
 
-namespace {
+namespace p {
     class Cueva {
         public:
             Escenas execute(Jugador player, bn::fixed_point spawn);

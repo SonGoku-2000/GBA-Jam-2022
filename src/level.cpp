@@ -6,6 +6,7 @@
 #include "bn_span.h"
 #include "bn_log.h"
 #include "bn_string.h"
+#include "bn_log.h"
 
 
 namespace fe
@@ -22,12 +23,14 @@ namespace fe
         
         while (!processed_map)
         {
-            if(cells.at(index) == 0){
+            BN_LOG(cells.at(index));
+            if(cells.at(index) == 7){
                 ++empties;
                 if(empties > 2){
                     processed_map = true;
                 }
             } else {
+
                 if(empties == 0){
                     _floor_tiles.push_back(cells.at(index));
                 } else if(empties == 1){

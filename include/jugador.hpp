@@ -40,7 +40,7 @@ class Jugador {
         /*bn::sprite_animate_action<10> _action = bn::create_sprite_animate_action_forever(
             _sprite, 6, bn::sprite_items::cat_sprite.tiles_item(), 0, 1, 0, 1, 0, 1, 0, 1, 0, 1);
         */
-        void _update_camera(int lerp);
+        void _update_camera(int lerp); 
 
     public:
         Jugador();
@@ -64,6 +64,7 @@ class Jugador {
         void spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map, bn::vector<fe::Enemy, 32>& enemies);
         void spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map);
         void reset();
+        void collide_with_objects(bn::affine_bg_ptr map, fe::Level level);
 };
 
 #endif

@@ -6,18 +6,15 @@
 #include "bn_span.h"
 #include "bn_log.h"
 #include "bn_size.h"
-#include "bn_vector.h"
 #include "bn_affine_bg_ptr.h"
 #include "bn_affine_bg_map_cell.h"
 
 #include "fe_extras.h"
-#include "hitbox.hpp"
-#include "level.hpp"
 
 namespace fe
 {
     
-    [[nodiscard]] bool check_collisions_bb(Hitbox boxA, Hitbox boxB){
+    [[nodiscard]] bool check_collisions_bb(fe::Hitbox boxA, fe::Hitbox boxB) {
         bool result =  boxA.x() - boxA.width()/2 < boxB.x() + boxB.width()/2 &&
             boxA.x() + boxA.width()/2 > boxB.x() - boxB.width()/2 &&
             boxA.y() - boxA.height()/2 < boxB.y() + boxB.height()/2 &&
@@ -25,7 +22,7 @@ namespace fe
         return result;
     }
 
-    [[nodiscard]] bool check_collisions_bb(Hitbox boxA, bn::fixed x, bn::fixed y, bn::fixed w, bn::fixed h){
+    [[nodiscard]] bool check_collisions_bb(fe::Hitbox boxA, bn::fixed x, bn::fixed y, bn::fixed w, bn::fixed h) {
         bool result =  boxA.x() - boxA.width()/2 < x + w/2 &&
             boxA.x() + boxA.width()/2 > x - w/2 &&
             boxA.y() - boxA.height()/2 < y + h/2 &&
