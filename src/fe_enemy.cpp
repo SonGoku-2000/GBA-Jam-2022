@@ -1,6 +1,6 @@
 #include "fe_enemy.h"
 #include "fe_enemy_type.h"
-#include "fe_hitbox.h"
+#include "hitbox.hpp"
 #include "fe_collision.h"
 
 #include "bn_optional.h"

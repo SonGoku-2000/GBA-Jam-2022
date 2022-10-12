@@ -2,7 +2,7 @@
 #define FE_HOUSE_SCENE_H
 
 #include "fe_scene.h"
-#include "fe_player.h"
+#include "jugador.hpp"
 #include "bn_fixed_point.h"
 
 namespace fe
@@ -10,7 +10,7 @@ namespace fe
     class House
     {       
         public:
-            Scene execute(Player player, bn::fixed_point spawn);
+            Scene execute(Jugador player, bn::fixed_point spawn);
     };
 }
 
