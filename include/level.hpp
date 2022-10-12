@@ -1,5 +1,5 @@
-#ifndef FE_LEVEL_H
-#define FE_LEVEL_H
+#ifndef LEVEL_HPP
+#define LEVEL_HPP
 
 #include "bn_affine_bg_ptr.h"
 #include "bn_vector.h"

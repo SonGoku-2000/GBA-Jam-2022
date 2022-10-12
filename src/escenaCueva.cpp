@@ -1,4 +1,4 @@
-#include "fe_house_scene.h"
+#include "escenaCueva.hpp"
 
 //butano
 #include "bn_compare.h"
@@ -19,22 +19,14 @@
 //fe code
 #include "level.hpp"
 #include "jugador.hpp"
-#include "fe_scene.h"
-//#include "fe_npc.h"
-//#include "fe_npc_type.h"
+#include "escenas.hpp"
 
 //assets
-//#include "bn_sprite_items_cat_sprite.h"
-//#include "bn_sprite_items_box.h"
-//#include "bn_affine_bg_items_house.h"
-//#include "bn_regular_bg_items_house_bg.h"
 #include "bn_affine_bg_items_mapa.h"
 
 
-namespace fe
-{
-    Scene House::execute(Jugador player, bn::fixed_point spawn_location)
-    {
+namespace {
+    Escenas House::execute(Jugador player, bn::fixed_point spawn_location) {
 
         bn::camera_ptr camera = bn::camera_ptr::create(spawn_location.x(), spawn_location.y());
 
@@ -43,7 +35,7 @@ namespace fe
 
         // map
         //bn::regular_bg_ptr map_bg = bn::regular_bg_items::house_bg.create_bg(512, 512);
-        bn::affine_bg_ptr map = bn::affine_bg_items::mapa.create_bg(512, 512);
+        bn::affine_bg_ptr map = bn::affine_bg_items::mapa.create_bg(128, 128);
         //map_bg.set_priority(2);
         map.set_priority(1);
         fe::Level level = fe::Level(map);
@@ -56,11 +48,12 @@ namespace fe
 
         // bn::fixed max_cpu_usage;
         // int counter = 1;
-        bn::vector<Enemy, 32> enemies = {};
+        //bn::vector<Enemy, 32> enemies = {};
 
         // player
-        player.spawn(spawn_location, camera, map, enemies);
-        while(true)
+        //player.spawn(spawn_location, camera, map, enemies);
+        player.spawn(spawn_location, camera, map);
+        while (true)
         {
 
             // max_cpu_usage = bn::max(max_cpu_usage, bn::core::last_cpu_usage());
@@ -84,11 +77,14 @@ namespace fe
             }
             tortoise.update();
 */
-            //elevator.update_position();
-            player.update_position(map,level);
+//elevator.update_position();
+            player.update_position(map, level);
             //player.apply_animation_state();
             // BN_LOG(bn::to_string<32>(player.pos().x())+" " + bn::to_string<32>(player.pos().y()));
-            
+
+            if (bn::keypad::start_pressed()) {
+                return Escenas::CUEVA;
+            }
             /*
             if(bn::keypad::up_pressed())
             {
@@ -99,8 +95,8 @@ namespace fe
                 }
             }
             */
-            
-            
+
+
             bn::core::update();
         }
     }

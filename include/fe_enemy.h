@@ -15,7 +15,7 @@
 
 #include "fe_enemy_type.h"
 #include "hitbox.hpp"
-#include "fe_level.h"
+#include "level.hpp"
 
 namespace fe
 {

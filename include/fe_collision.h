@@ -12,7 +12,7 @@
 
 #include "fe_extras.h"
 #include "hitbox.hpp"
-#include "fe_level.h"
+#include "level.hpp"
 
 namespace fe
 {

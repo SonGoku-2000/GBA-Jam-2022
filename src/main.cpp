@@ -12,9 +12,7 @@ int main() {
     bn::sprite_ptr _sprite = bn::sprite_items::obstaculo.create_sprite(40, 10);
 
     while(true) {
-        fe::House house = fe::House();
-        house.execute(jugador, bn::fixed_point(288, 292));
-        //jugador.update_position();
+        jugador.update_position();
         bn::core::update();
     }
 }

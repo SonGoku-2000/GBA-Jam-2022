@@ -10,7 +10,7 @@
 #include "bn_span.h"
 #include "bn_affine_bg_map_cell.h"
 
-#include "fe_level.h"
+#include "level.hpp"
 #include "hitbox.hpp"
 #include "fe_enemy.h"
 
@@ -25,11 +25,8 @@ class Jugador {
         bool _jumping = false;
         bool _falling = false;
         bool _running = false;
-        bool _listening = false;
         bool _grounded = false;
         bool _sliding = false;
-        bool _wall_running = false;
-        bool _wall_jumped = false;
         bool _already_running = false;
         bool _attacking = false;
         bn::span<const bn::affine_bg_map_cell> _map_cells;
@@ -51,8 +48,9 @@ class Jugador {
         void moverDerecha();
         void moverArriba();
         void moverAbajo();
-        void caer();
+        //void caer();
         void update_position(bn::affine_bg_ptr map, fe::Level level);
+        void update_position();
         void jump();
         void ataque();
         
@@ -64,6 +62,7 @@ class Jugador {
         //void actualzarPosicion(bn::affine_bg_ptr map, fe::Level level);
 
         void spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map, bn::vector<fe::Enemy, 32>& enemies);
+        void spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map);
         void reset();
 };
 
