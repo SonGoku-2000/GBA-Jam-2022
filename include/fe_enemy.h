@@ -14,7 +14,7 @@
 #include "bn_affine_bg_map_cell.h"
 
 #include "fe_enemy_type.h"
-#include "hitbox.hpp"
+#include "fe_hitbox.h"
 #include "fe_level.h"
 
 namespace fe
