@@ -71,34 +71,6 @@ namespace fe {
         }
     }
 
-    [[nodiscard]] bool check_collisions_map(directions direction, Hitbox hitbox, bn::affine_bg_ptr& map, fe::Level level, bn::span<const bn::affine_bg_map_cell> cells) {
-        bn::fixed l = hitbox.left();
-        bn::fixed r = hitbox.right();
-        bn::fixed u = hitbox.top();
-        bn::fixed d = hitbox.bottom();
-
-        bn::vector<int, 32> tiles;
-        if (direction == down) {
-            tiles = level.floor_tiles();
-        }
-        else if (direction == left || direction == right) {
-            tiles = level.wall_tiles();
-        }
-        else if (direction == up) {
-            tiles = level.ceil_tiles();
-        }
-
-        if (contains_cell(get_map_cell(l, u, map, cells), tiles) ||
-            contains_cell(get_map_cell(l, d, map, cells), tiles) ||
-            contains_cell(get_map_cell(r, u, map, cells), tiles) ||
-            contains_cell(get_map_cell(l, d, map, cells), tiles)) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
     //constants
     constexpr const bn::fixed gravity = 0.2;
     constexpr const bn::fixed wall_run_speed = 0.25;
@@ -107,8 +79,8 @@ namespace fe {
     constexpr const bn::fixed max_dy = 6;
     constexpr const bn::fixed friction = 0.85;
 
-    Player::Player() :
-        _sprite(bn::sprite_items::cat_sprite.create_sprite(0, 0)),
+    Player::Player(bn::sprite_ptr sprite) :
+        _sprite(sprite),
         _camera(bn::camera_ptr::create(0, 0)),
         _map(bn::affine_bg_items::house.create_bg(0, 0)),
         _text_bg1(bn::sprite_items::text_bg.create_sprite(0, 0)),
@@ -233,14 +205,13 @@ namespace fe {
                 _dy = max_dy;
             }
 
-            if (check_collisions_map(down, _hitbox_fall, map, level, _map_cells)) {
+            if (check_collisions_map(_pos, down, _hitbox_fall, map, level, _map_cells)) {
                 _grounded = true;
                 _wall_jumped = false;
                 _wall_running = false;
                 _falling = false;
                 _dy = 0;
                 _pos.set_y(_pos.y() - modulo(_pos.y() + 8, 16));
-                _hitbox_fall.mover(_pos);
                 //todo if they pressed jump a few milliseconds before hitting the ground then jump now
             }
         }
@@ -426,9 +397,6 @@ namespace fe {
         // update position
         _pos.set_x(_pos.x() + _dx);
         _pos.set_y(_pos.y() + _dy);
-
-        // actualizar posicion hitbox
-        _hitbox_fall.mover(_pos);
 
         // lock player position to map limits x
         if (_pos.x() > 1016) {

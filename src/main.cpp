@@ -1,5 +1,4 @@
 #include "bn_core.h"
-#include "bn_compare.h"
 #include "bn_math.h"
 #include "bn_sprite_builder.h"
 #include "bn_sprite_ptr.h"
@@ -35,7 +34,8 @@ int main() {
     fe::Scene scene = fe::Scene::SKY_DUNGEON;
     fe::Loading loading = fe::Loading();
 
-    fe::Player player = fe::Player();
+    bn::sprite_ptr cat_sprite = bn::sprite_items::cat_sprite.create_sprite(0, 0);
+    fe::Player player = fe::Player(cat_sprite);
 
     while (true) {
         if (scene == fe::Scene::HOUSE_START) {

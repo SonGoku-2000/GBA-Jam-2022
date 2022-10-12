@@ -45,7 +45,7 @@ namespace fe {
             bn::affine_bg_ptr _map;
             bn::vector<Enemy,32>* _enemies;
 
-            fe::Hitbox _hitbox_fall = Hitbox(0,4,4,1);
+            fe::Hitbox _hitbox_fall = Hitbox(0,4,4,0);
             fe::Hitbox _hitbox_left = Hitbox(-2,0,2,4);
             fe::Hitbox _hitbox_right = Hitbox(2,0,2,4);
             fe::Hitbox _hitbox_jump = Hitbox(0,2,4,2);
@@ -55,7 +55,7 @@ namespace fe {
             
 
         public:
-            Player();
+            Player(bn::sprite_ptr sprite);
             
             [[nodiscard]] bn::fixed_point pos();
 
