@@ -23,8 +23,8 @@ namespace fe
         
         while (!processed_map)
         {
-            BN_LOG(cells.at(index));
-            if(cells.at(index) == 7){
+            //BN_LOG(cells.at(index));
+            if(cells.at(index) == 0){
                 ++empties;
                 if(empties > 2){
                     processed_map = true;

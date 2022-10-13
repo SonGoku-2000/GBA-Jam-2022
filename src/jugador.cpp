@@ -54,6 +54,40 @@ enum directions { up, down, left, right };
     else if (direction == up) {
         tiles = level.ceil_tiles();
     }
+    //BN_LOG("D ", pos.x(), " ", pos.y(), " ", get_map_cell(l, u, map, cells), " ");
+    //BN_LOG("D ", l, " ", d, " ", get_map_cell(l, u, map, cells), " ");
+    //BN_LOG(get_map_cell(l, u, map, cells));
+
+    if (contains_cell(get_map_cell(l, u, map, cells), tiles) ||
+        contains_cell(get_map_cell(l, d, map, cells), tiles) ||
+        contains_cell(get_map_cell(r, u, map, cells), tiles) ||
+        contains_cell(get_map_cell(l, d, map, cells), tiles)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+[[nodiscard]] bool check_collisions_map(directions direction, fe::Hitbox hitbox, bn::affine_bg_ptr& map, fe::Level level, bn::span<const bn::affine_bg_map_cell> cells) {
+
+    bn::fixed l = hitbox.left() / 2;
+    bn::fixed r = hitbox.right() / 2;
+    bn::fixed u = hitbox.top() / 2;
+    bn::fixed d = hitbox.bottom() / 2;
+
+    bn::vector<int, 32> tiles;
+    if (direction == down) {
+        tiles = level.floor_tiles();
+    }
+    else if (direction == left || direction == right) {
+        tiles = level.wall_tiles();
+    }
+    else if (direction == up) {
+        tiles = level.ceil_tiles();
+    }
+    //BN_LOG(hitbox.x(), " ", hitbox.y(), " ", get_map_cell(l, u, map, cells), " ");
+    //BN_LOG("c",l, " ", d, " ", get_map_cell(l, u, map, cells), " ");
 
     if (contains_cell(get_map_cell(l, u, map, cells), tiles) ||
         contains_cell(get_map_cell(l, d, map, cells), tiles) ||
@@ -75,13 +109,13 @@ constexpr const bn::fixed friction = 0.85;
 
 Jugador::Jugador() :
     _sprite(bn::sprite_items::pirata1.create_sprite(0, 0)),
-    _camera(bn::camera_ptr::create(0, 0)) ,
+    _camera(bn::camera_ptr::create(0, 0)),
     _map(bn::affine_bg_items::mapa.create_bg(0, 0)) {
     _map.set_visible(false);
     _pos.set_x(0);
     _pos.set_y(0);
-    _hitbox_fall.set_y(4);
-    //_hitbox_fall.set_height(16);
+
+    actualizarHitboxes(_pos);
 }
 
 void Jugador::moverDerecha() {
@@ -124,6 +158,13 @@ void Jugador::_update_camera(int lerp) {
     }
 }
 
+void Jugador::actualizarHitboxes(bn::fixed_point pos) {
+    _hitbox_fall.mover(pos);
+    _hitbox_jump.mover(pos);
+    _hitbox_left.mover(pos);
+    _hitbox_right.mover(pos);
+}
+
 void Jugador::collide_with_objects(bn::affine_bg_ptr map, fe::Level level) {
     // if falling
     if (_dy > 0) {
@@ -143,28 +184,32 @@ void Jugador::collide_with_objects(bn::affine_bg_ptr map, fe::Level level) {
             _dy = max_dy;
         }
 
-        if (check_collisions_map(_pos, down, _hitbox_fall, map, level, _map_cells)) {
+        if (check_collisions_map(down, _hitbox_fall, map, level, _map_cells)) {
             _grounded = true;
             //_wall_jumped = false;
             //_wall_running = false;
             _falling = false;
             _dy = 0;
-            _pos.set_y(_pos.y() - fe::modulo(_pos.y() + 8, 16));
+            _pos.set_y(_pos.y() - fe::modulo(_pos.y(), 16));
+            actualizarHitboxes(_pos);
+            //_pos.set_y(_pos.y() - fe::modulo(_pos.y() + 8, 16));
             //todo if they pressed jump a few milliseconds before hitting the ground then jump now
         }
     }
-    else if (_dy < 0) // jumping
-    {
+    else if (_dy < 0){ // jumping
+    
         _jumping = false;
 
-        /*if (!_wall_running) {
+        /*
+        if (!_wall_running) {
             _jumping = true;
         }
         else {
             _jumping = false;
         }*/
 
-        if (check_collisions_map(_pos, up, _hitbox_jump, map, level, _map_cells)) {
+        //if (check_collisions_map(_pos, up, _hitbox_jump, map, level, _map_cells)) {
+        if (check_collisions_map(up, _hitbox_jump, map, level, _map_cells)) {
             _dy = 0;
             //_wall_running = false;
         }
@@ -172,14 +217,16 @@ void Jugador::collide_with_objects(bn::affine_bg_ptr map, fe::Level level) {
 
     if (_dx > 0) // moving right
     {
-        if (check_collisions_map(_pos, right, _hitbox_right, map, level, _map_cells)) {
+        //if (check_collisions_map(_pos, right, _hitbox_right, map, level, _map_cells)) {
+        if (check_collisions_map(right, _hitbox_right, map, level, _map_cells)) {
             _dx = 0;
 
         }
     }
     else if (_dx < 0) // moving left
     {
-        if (check_collisions_map(_pos, left, _hitbox_left, map, level, _map_cells)) {
+        //if (check_collisions_map(_pos, left, _hitbox_left, map, level, _map_cells)) {
+        if (check_collisions_map(left, _hitbox_left, map, level, _map_cells)) {
             _dx = 0;
         }
     }
@@ -208,15 +255,15 @@ void Jugador::update_position(bn::affine_bg_ptr map, fe::Level level) {
     else if (bn::keypad::right_held()) {
         moverDerecha();
     }
-    else if (_running) //slide to a stop
-    {
+    else if (_running) { //slide to a stop
+    
         if (!_falling & !_jumping) {
             _sliding = true;
             _running = false;
         }
     }
-    else if (_sliding) //stop sliding
-    {
+    else if (_sliding) { //stop sliding
+    
         if (bn::abs(_dx) < 0.1 || _running) {
             _sliding = false;
         }
@@ -255,21 +302,27 @@ void Jugador::update_position(bn::affine_bg_ptr map, fe::Level level) {
             //check_attack();
 
             // collide
-            collide_with_objects(map, level);
+    collide_with_objects(map, level);
 
-            // update position
+    // update position
     _pos.set_x(_pos.x() + _dx);
     _pos.set_y(_pos.y() + _dy);
 
-    /*// lock player position to map limits x
+    //_hitbox_fall.set_position(_pos);
+    actualizarHitboxes(_pos);
+    //_hitbox_fall.mover(_pos);
+
+    // lock player position to map limits x
     if (_pos.x() > 1016) {
         _pos.set_x(1016);
+        actualizarHitboxes(_pos);
     }
     else if (_pos.x() < 4) {
         _pos.set_x(4);
+        actualizarHitboxes(_pos);
     }
-*/
-    // update sprite position
+
+// update sprite position
     _sprite.set_x(_pos.x());
     _sprite.set_y(_pos.y());
 
@@ -305,7 +358,7 @@ void Jugador::update_position() {
             _sliding = false;
         }
     }
-    
+
     if (bn::keypad::up_held()) {
         if (_dy > 0 && bn::abs(_dx) > 1 && !_wall_jumped && _can_wallrun) {
             _wall_running = true;
@@ -316,7 +369,7 @@ void Jugador::update_position() {
     else {
         _wall_running = false;
     }
-    
+
         if (_listening) {
             _text_bg1.set_position(_camera.x() + 64 + 8, _camera.y() + 40 + 24);
             _text_bg2.set_position(_camera.x() - 64 + 8, _camera.y() + 40 + 24);
@@ -326,7 +379,7 @@ void Jugador::update_position() {
         if (bn::keypad::a_pressed()) {
             jump();
         }
-        
+
             // attack
             if (bn::keypad::b_pressed()) {
                 attack();
@@ -358,6 +411,9 @@ void Jugador::update_position() {
 
 void Jugador::spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map, bn::vector<fe::Enemy, 32>& enemies) {
     _pos = pos;
+    _hitbox_fall.mover(_pos);
+    BN_LOG(_hitbox_fall.x());
+    BN_LOG(_hitbox_fall.y());
     _camera = camera;
     _map = map;
     _map_cells = map.map().cells_ref().value();
@@ -368,6 +424,10 @@ void Jugador::spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_pt
 }
 void Jugador::spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map) {
     _pos = pos;
+    _hitbox_fall.mover(_pos);
+
+    BN_LOG(_hitbox_fall.x());
+    BN_LOG(_hitbox_fall.y());
     _camera = camera;
     _map = map;
     _map_cells = map.map().cells_ref().value();

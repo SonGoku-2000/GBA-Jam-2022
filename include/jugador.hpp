@@ -33,7 +33,7 @@ class Jugador {
         bn::affine_bg_ptr _map;
         bn::vector<fe::Enemy, 32>* _enemies;
 
-        fe::Hitbox _hitbox_fall = fe::Hitbox(0, 4, 4, 0);
+        fe::Hitbox _hitbox_fall = fe::Hitbox(0, 8, 4, 0);
         fe::Hitbox _hitbox_left = fe::Hitbox(-2, 0, 2, 4);
         fe::Hitbox _hitbox_right = fe::Hitbox(2, 0, 2, 4);
         fe::Hitbox _hitbox_jump = fe::Hitbox(0, 2, 4, 2);
@@ -53,6 +53,8 @@ class Jugador {
         void update_position();
         void jump();
         void ataque();
+
+        void actualizarHitboxes(bn::fixed_point pos);
         
         void comprobarAtaque();
         //void collide_with_objects(bn::affine_bg_ptr map, fe::Level level);

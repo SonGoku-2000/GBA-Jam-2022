@@ -14,7 +14,7 @@ int main() {
 
     while(true) {
         p::Cueva cueva = p::Cueva();
-        cueva.execute(jugador, bn::fixed_point(350,250));
+        cueva.execute(jugador, bn::fixed_point(350,200));
         //jugador.update_position();
         bn::core::update();
     }
