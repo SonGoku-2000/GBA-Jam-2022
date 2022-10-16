@@ -38,6 +38,7 @@ enum directions { up, down, left, right };
     return false;
 }
 
+/*
 [[nodiscard]] bool check_collisions_map(bn::fixed_point pos, directions direction, fe::Hitbox hitbox, bn::affine_bg_ptr& map, fe::Level level, bn::span<const bn::affine_bg_map_cell> cells) {
     bn::fixed l = pos.x() / 2 - hitbox.width() / 2 + hitbox.x();
     bn::fixed r = pos.x() / 2 + hitbox.width() / 2 + hitbox.x();
@@ -68,6 +69,7 @@ enum directions { up, down, left, right };
         return false;
     }
 }
+*/
 
 [[nodiscard]] bool check_collisions_map(directions direction, fe::Hitbox hitbox, bn::affine_bg_ptr& map, fe::Level level, bn::span<const bn::affine_bg_map_cell> cells) {
 
