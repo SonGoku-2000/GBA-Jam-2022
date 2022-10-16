@@ -73,10 +73,10 @@ enum directions { up, down, left, right };
 
 [[nodiscard]] bool check_collisions_map(directions direction, fe::Hitbox hitbox, bn::affine_bg_ptr& map, fe::Level level, bn::span<const bn::affine_bg_map_cell> cells) {
 
-    bn::fixed l = hitbox.left() / 2;
-    bn::fixed r = hitbox.right() / 2;
-    bn::fixed u = hitbox.top() / 2;
-    bn::fixed d = hitbox.bottom() / 2;
+    bn::fixed l = hitbox.left();
+    bn::fixed r = hitbox.right();
+    bn::fixed u = hitbox.top();
+    bn::fixed d = hitbox.bottom();
 
     bn::vector<int, 32> tiles;
     if (direction == down) {

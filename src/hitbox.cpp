@@ -5,21 +5,21 @@
 
 namespace fe {
     Hitbox::Hitbox(bn::fixed x, bn::fixed y, bn::fixed width, bn::fixed height) :
-        bn::fixed_rect(x, y, width, height){
-            _offsetX = x * 2;
-            _offsetY = y * 2;
-            //BN_LOG(_offsetX);
-            //BN_LOG(_offsetY);
+        bn::fixed_rect(x, y, width, height) {
+        _offsetX = x * 2;
+        _offsetY = y * 2;
+        //BN_LOG(_offsetX);
+        //BN_LOG(_offsetY);
     }
-    void Hitbox::setOffsetY(bn::fixed y){
+    void Hitbox::setOffsetY(bn::fixed y) {
         _offsetY = y;
     }
-    void Hitbox::setOffsetX(bn::fixed x){
+    void Hitbox::setOffsetX(bn::fixed x) {
         _offsetX = x;
     }
-    void Hitbox::mover(bn::fixed_point pos){
-        set_x(_offsetX + pos.x());
-        set_y(_offsetY + pos.y());
+    void Hitbox::mover(bn::fixed_point pos) {
+        set_x((_offsetX + pos.x()) / 2);
+        set_y((_offsetY + pos.y()) / 2);
     }
 }
 
