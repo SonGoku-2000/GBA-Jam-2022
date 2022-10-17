@@ -15,6 +15,8 @@
 
 #include "hitbox.hpp"
 
+#include "enemigo.hpp"
+
 #include "fe_extras.h"
 
 #include "bn_sprite_items_pirata1.h"
@@ -37,39 +39,6 @@ enum directions { up, down, left, right };
     }
     return false;
 }
-
-/*
-[[nodiscard]] bool check_collisions_map(bn::fixed_point pos, directions direction, fe::Hitbox hitbox, bn::affine_bg_ptr& map, fe::Level level, bn::span<const bn::affine_bg_map_cell> cells) {
-    bn::fixed l = pos.x() / 2 - hitbox.width() / 2 + hitbox.x();
-    bn::fixed r = pos.x() / 2 + hitbox.width() / 2 + hitbox.x();
-    bn::fixed u = pos.y() / 2 - hitbox.height() / 2 + hitbox.y();
-    bn::fixed d = pos.y() / 2 + hitbox.height() / 2 + hitbox.y();
-
-    bn::vector<int, 32> tiles;
-    if (direction == down) {
-        tiles = level.floor_tiles();
-    }
-    else if (direction == left || direction == right) {
-        tiles = level.wall_tiles();
-    }
-    else if (direction == up) {
-        tiles = level.ceil_tiles();
-    }
-    //BN_LOG("D ", pos.x(), " ", pos.y(), " ", get_map_cell(l, u, map, cells), " ");
-    //BN_LOG("D ", l, " ", d, " ", get_map_cell(l, u, map, cells), " ");
-    //BN_LOG(get_map_cell(l, u, map, cells));
-
-    if (contains_cell(get_map_cell(l, u, map, cells), tiles) ||
-        contains_cell(get_map_cell(l, d, map, cells), tiles) ||
-        contains_cell(get_map_cell(r, u, map, cells), tiles) ||
-        contains_cell(get_map_cell(l, d, map, cells), tiles)) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-*/
 
 [[nodiscard]] bool check_collisions_map(directions direction, fe::Hitbox hitbox, bn::affine_bg_ptr& map, fe::Level level, bn::span<const bn::affine_bg_map_cell> cells) {
 
@@ -411,7 +380,7 @@ void Jugador::update_position() {
 }
 */
 
-void Jugador::spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map, bn::vector<fe::Enemy, 32>& enemies) {
+void Jugador::spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map, bn::vector<Enemigo, 32>& enemies) {
     _pos = pos;
     _hitbox_fall.mover(_pos);
     BN_LOG(_hitbox_fall.x());
@@ -424,6 +393,7 @@ void Jugador::spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_pt
 
     reset();
 }
+
 void Jugador::spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map) {
     _pos = pos;
     _hitbox_fall.mover(_pos);

@@ -14,6 +14,7 @@ namespace fe
             bn::vector<int,32> _ceil_tiles;
             
         public:
+            Level(bn::affine_bg_ptr bg, bool debug);
             Level(bn::affine_bg_ptr bg);
 
             [[nodiscard]] bn::vector<int,32> floor_tiles();

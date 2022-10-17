@@ -13,11 +13,6 @@ namespace fe {
         private:
             bn::fixed _offsetY;
             bn::fixed _offsetX;
-            /*
-            bn::fixed_point _pos;
-            bn::fixed _width;
-            bn::fixed _height;
-            */
 
         public:
             Hitbox();
@@ -25,18 +20,6 @@ namespace fe {
             void mover(bn::fixed_point pos);
             void setOffsetY(bn::fixed y);
             void setOffsetX(bn::fixed x);
-            /*
-            bn::fixed x();
-            bn::fixed y();
-            bn::fixed width();
-            bn::fixed height();
-            bn::fixed_point pos();
-
-            void set_x(bn::fixed x);
-            void set_y(bn::fixed y);
-            void set_width(bn::fixed width);
-            void set_height(bn::fixed height);
-            */
     };
 }
 

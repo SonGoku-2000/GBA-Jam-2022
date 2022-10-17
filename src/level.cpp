@@ -11,7 +11,7 @@
 
 namespace fe
 {
-    Level::Level(bn::affine_bg_ptr bg)
+    Level::Level(bn::affine_bg_ptr bg, bool debug = true)
     {
         bool processed_map = false;
         int index = 0;
@@ -41,6 +41,48 @@ namespace fe
             }
             ++index;
         }
+
+        if (debug){
+            for (int tile : _floor_tiles) {
+                BN_LOG(tile);
+            }
+        }
+       
+    }
+    Level::Level(bn::affine_bg_ptr bg)
+    {
+        bool processed_map = false;
+        int index = 0;
+        int empties = 0;
+        _floor_tiles = {};
+        _wall_tiles = {};
+        _ceil_tiles = {};
+        bn::span<const bn::affine_bg_map_cell> cells = bg.map().cells_ref().value();
+
+        while (!processed_map)
+        {
+            //BN_LOG(cells.at(index));
+            if (cells.at(index) == 0) {
+                ++empties;
+                if (empties > 2) {
+                    processed_map = true;
+                }
+            }
+            else {
+
+                if (empties == 0) {
+                    _floor_tiles.push_back(cells.at(index));
+                }
+                else if (empties == 1) {
+                    _wall_tiles.push_back(cells.at(index));
+                }
+                else if (empties == 2) {
+                    _ceil_tiles.push_back(cells.at(index));
+                }
+            }
+            ++index;
+        }
+
     }
 
     bn::vector<int,32> Level::floor_tiles(){

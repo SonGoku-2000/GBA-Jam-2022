@@ -20,6 +20,8 @@
 #include "level.hpp"
 #include "jugador.hpp"
 #include "escenas.hpp"
+#include "enemigo.hpp"
+#include "pirata_malo.hpp"
 
 //assets
 #include "bn_affine_bg_items_mapa.h"
@@ -38,7 +40,9 @@ namespace p {
         bn::affine_bg_ptr map = bn::affine_bg_items::mapa.create_bg(512, 512);
         //map_bg.set_priority(2);
         map.set_priority(1);
-        fe::Level level = fe::Level(map);
+
+        fe::Level nivel = fe::Level(map,true);
+
         map.set_horizontal_scale(2);
         map.set_vertical_scale(2);
 
@@ -48,10 +52,13 @@ namespace p {
 
         // bn::fixed max_cpu_usage;
         // int counter = 1;
-        bn::vector<fe::Enemy, 32> enemies = {};
+        bn::vector<Enemigo, 32> enemigos = {};
 
-        // player
+        // player BN_LOG()
         //player.spawn(spawn_location, camera, map, enemies);
+
+        //enemigos.push_back(fe::Enemy(290, 169, camera, map, 2));
+        enemigos.push_back(PirataMalo(360, 200, camera, map, 2));
         player.spawn(spawn_location, camera, map);
         while (true)
         {
@@ -78,7 +85,7 @@ namespace p {
             tortoise.update();
 */
 //elevator.update_position();
-            player.update_position(map, level);
+            player.update_position(map, nivel);
             //player.apply_animation_state();
             // BN_LOG(bn::to_string<32>(player.pos().x())+" " + bn::to_string<32>(player.pos().y()));
 

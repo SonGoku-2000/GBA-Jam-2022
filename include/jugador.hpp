@@ -12,7 +12,7 @@
 
 #include "level.hpp"
 #include "hitbox.hpp"
-#include "fe_enemy.h"
+#include "enemigo.hpp"
 
 class Jugador {
     private:
@@ -31,7 +31,7 @@ class Jugador {
         bool _attacking = false;
         bn::span<const bn::affine_bg_map_cell> _map_cells;
         bn::affine_bg_ptr _map;
-        bn::vector<fe::Enemy, 32>* _enemies;
+        bn::vector<Enemigo, 32>* _enemies;
 
         fe::Hitbox _hitbox_fall = fe::Hitbox(0, 8, 4, 0);
         fe::Hitbox _hitbox_left = fe::Hitbox(-2, 0, 2, 4);
@@ -63,7 +63,7 @@ class Jugador {
         //void apply_animation_state();
         //void actualzarPosicion(bn::affine_bg_ptr map, fe::Level level);
 
-        void spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map, bn::vector<fe::Enemy, 32>& enemies);
+        void spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map, bn::vector<Enemigo, 32>& enemies);
         void spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map);
         void reset();
         void collide_with_objects(bn::affine_bg_ptr map, fe::Level level);
