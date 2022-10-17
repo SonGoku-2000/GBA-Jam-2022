@@ -15,6 +15,7 @@
 
 #include "level.hpp"
 #include "hitbox.hpp"
+#include "variables_globales.hpp"
 
 enum class ENEMY_TYPE
 {
@@ -29,7 +30,7 @@ class Enemigo{
         bn::fixed _dx = 0;
         bn::camera_ptr _camera;
         ENEMY_TYPE _type;
-        int _dir;
+        direcciones _dir;
         int _hp;
         int _direction_timer = 0;
         bool _invulnerable = false;

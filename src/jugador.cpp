@@ -14,7 +14,7 @@
 #include "bn_log.h"
 
 #include "hitbox.hpp"
-
+#include "variables_globales.hpp"
 #include "enemigo.hpp"
 
 #include "fe_extras.h"
@@ -23,7 +23,9 @@
 #include "bn_affine_bg_items_mapa.h"
 
 
-enum directions { up, down, left, right };
+
+
+
 
 [[nodiscard]] int get_map_cell(bn::fixed x, bn::fixed y, bn::affine_bg_ptr& map, bn::span<const bn::affine_bg_map_cell> cells) {
     int map_size = map.dimensions().width();
@@ -40,7 +42,7 @@ enum directions { up, down, left, right };
     return false;
 }
 
-[[nodiscard]] bool check_collisions_map(directions direction, fe::Hitbox hitbox, bn::affine_bg_ptr& map, fe::Level level, bn::span<const bn::affine_bg_map_cell> cells) {
+[[nodiscard]] bool check_collisions_map(direcciones direccion, fe::Hitbox hitbox, bn::affine_bg_ptr& map, fe::Level level, bn::span<const bn::affine_bg_map_cell> cells) {
 
     bn::fixed l = hitbox.left();
     bn::fixed r = hitbox.right();
@@ -48,13 +50,13 @@ enum directions { up, down, left, right };
     bn::fixed d = hitbox.bottom();
 
     bn::vector<int, 32> tiles;
-    if (direction == down) {
+    if (direccion == down) {
         tiles = level.floor_tiles();
     }
-    else if (direction == left || direction == right) {
+    else if (direccion == left || direccion == right) {
         tiles = level.wall_tiles();
     }
-    else if (direction == up) {
+    else if (direccion == up) {
         tiles = level.ceil_tiles();
     }
     //BN_LOG(hitbox.x(), " ", hitbox.y(), " ", get_map_cell(l, u, map, cells), " ");

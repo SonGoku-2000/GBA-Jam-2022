@@ -5,6 +5,7 @@
 #include "colision.hpp"
 #include "fe_extras.h"
 
+#include "variables_globales.hpp"
 #include "level.hpp"
 
 #include "bn_optional.h"
@@ -14,8 +15,6 @@
 #include "bn_keypad.h"
 #include "bn_affine_bg_map_ptr.h"
 
-
-enum directions { up, down, left, right };
 
 [[nodiscard]] int _get_map_cell(bn::fixed x, bn::fixed y, bn::affine_bg_ptr& map, bn::span<const bn::affine_bg_map_cell> cells)
 {
@@ -36,7 +35,7 @@ enum directions { up, down, left, right };
     return false;
 }
 
-[[nodiscard]] bool _check_collisions_map(fe::Hitbox hitbox, directions direction, bn::affine_bg_ptr& map, fe::Level level, bn::span<const bn::affine_bg_map_cell> cells) {
+[[nodiscard]] bool _check_collisions_map(fe::Hitbox hitbox, direcciones direccion, bn::affine_bg_ptr& map, fe::Level level, bn::span<const bn::affine_bg_map_cell> cells) {
 
     bn::fixed l = hitbox.left();
     bn::fixed r = hitbox.right();
@@ -44,13 +43,13 @@ enum directions { up, down, left, right };
     bn::fixed d = hitbox.bottom();
 
     bn::vector<int, 32> tiles;
-    if (direction == down) {
+    if (direccion == down) {
         tiles = level.floor_tiles();
     }
-    else if (direction == left || direction == right) {
+    else if (direccion == left || direccion == right) {
         tiles = level.wall_tiles();
     }
-    else if (direction == up) {
+    else if (direccion == up) {
         tiles = level.ceil_tiles();
     }
     //BN_LOG(hitbox.x(), " ", hitbox.y(), " ", get_map_cell(l, u, map, cells), " ");
@@ -98,7 +97,7 @@ Enemigo::Enemigo(int x, int y, bn::camera_ptr camera, bn::affine_bg_ptr map, ENE
 Enemigo::Enemigo(int x, int y, bn::camera_ptr camera, bn::affine_bg_ptr map, int hp) :
     _pos(x, y), _camera(camera), _hp(hp), _map(map), _level(fe::Level(map)) {
     _map_cells = map.map().cells_ref().value();
-    _dir = 1;
+    _dir = left;
 }
 
 int Enemigo::hp() {
@@ -143,10 +142,10 @@ bool Enemigo::damage_from_right(int damage) {
     return _recibirDano(damage);
 }
 
+
+
+
 /*
-
-
-
 
 bool Enemy::_will_fall_or_hit_wall()
 {
