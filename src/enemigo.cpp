@@ -14,16 +14,17 @@
 #include "bn_display.h"
 #include "bn_keypad.h"
 #include "bn_affine_bg_map_ptr.h"
+#include "bn_sprite_items_pirata2.h"
 
 
-[[nodiscard]] int _get_map_cell(bn::fixed x, bn::fixed y, bn::affine_bg_ptr& map, bn::span<const bn::affine_bg_map_cell> cells)
+[[nodiscard]] int Enemigo::_get_map_cell(bn::fixed x, bn::fixed y, bn::affine_bg_ptr& map, bn::span<const bn::affine_bg_map_cell> cells)
 {
     int map_size = map.dimensions().width();
     int cell = fe::modulo((y.safe_division(8).right_shift_integer() * map_size / 8 + x / 8), map_size * 8).integer();
     return cells.at(cell);
 }
 
-[[nodiscard]] bool _contains_cell(int tile, bn::vector<int, 32> tiles)
+[[nodiscard]] bool Enemigo::_contains_cell(int tile, bn::vector<int, 32> tiles)
 {
     for (int index = 0; index < tiles.size(); ++index)
     {
@@ -35,7 +36,7 @@
     return false;
 }
 
-[[nodiscard]] bool _check_collisions_map(fe::Hitbox hitbox, direcciones direccion, bn::affine_bg_ptr& map, fe::Level level, bn::span<const bn::affine_bg_map_cell> cells) {
+[[nodiscard]] bool Enemigo::_check_collisions_map(bn::fixed_point pos, fe::Hitbox hitbox, direcciones direccion, bn::affine_bg_ptr& map, fe::Level level, bn::span<const bn::affine_bg_map_cell> cells) {
 
     bn::fixed l = hitbox.left();
     bn::fixed r = hitbox.right();
@@ -126,6 +127,11 @@ bool Enemigo::_recibirDano(int dano) {
         _dead = true;
         return true;
     }
+    return false;
+}
+
+void Enemigo::animacionMuerte(){
+
 }
 
 bool Enemigo::damage_from_left(int damage) {
@@ -142,7 +148,18 @@ bool Enemigo::damage_from_right(int damage) {
     return _recibirDano(damage);
 }
 
+void Enemigo::set_visible(bool visiblity) {
+    _sprite.value().set_visible(visiblity);
+}
 
+
+void Enemigo::update_position(){
+    BN_LOG("update_position() Funcion no implementada en enemigo.cpp");
+}
+
+void Enemigo::update_position(bn::affine_bg_ptr map, fe::Level level){
+    BN_LOG("update_position( map, level ) Funcion no implementada en enemigo.cpp");
+}
 
 
 /*
@@ -168,9 +185,6 @@ bool Enemy::_will_fall_or_hit_wall()
     }
     return false;
 }
-
-
-
 
 void Enemy::update() {
     //dead check

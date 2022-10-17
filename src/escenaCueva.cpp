@@ -15,6 +15,7 @@
 #include "bn_optional.h"
 #include "bn_span.h"
 #include "bn_affine_bg_map_cell.h"
+#include "bn_math.h"
 
 //fe code
 #include "level.hpp"
@@ -52,13 +53,13 @@ namespace p {
 
         // bn::fixed max_cpu_usage;
         // int counter = 1;
-        bn::vector<Enemigo, 32> enemigos = {};
+        bn::vector<PirataMalo, 32> enemigos = {};
 
         // player BN_LOG()
         //player.spawn(spawn_location, camera, map, enemies);
 
         //enemigos.push_back(fe::Enemy(290, 169, camera, map, 2));
-        enemigos.push_back(PirataMalo(360, 200, camera, map, 2));
+        enemigos.push_back(PirataMalo(450, 204, camera, map, 2));
         player.spawn(spawn_location, camera, map);
         while (true)
         {
@@ -83,7 +84,16 @@ namespace p {
                 }
             }
             tortoise.update();
+            
 */
+            for (PirataMalo& enemigo : enemigos) {
+                if (bn::abs(enemigo.pos().x() - camera.x()) < 200 && bn::abs(enemigo.pos().y() - camera.y()) < 100) {
+                    enemigo.update_position();
+                }
+                else {
+                    enemigo.set_visible(false);
+                }
+            }
 //elevator.update_position();
             player.update_position(map, nivel);
             //player.apply_animation_state();
