@@ -23,6 +23,7 @@
 #include "escenas.hpp"
 #include "enemigo.hpp"
 #include "pirata_malo.hpp"
+#include "otro_malo.hpp"
 
 //assets
 #include "bn_affine_bg_items_mapa.h"
@@ -42,7 +43,7 @@ namespace p {
         //map_bg.set_priority(2);
         map.set_priority(1);
 
-        fe::Level nivel = fe::Level(map,true);
+        fe::Level nivel = fe::Level(map, true);
 
         map.set_horizontal_scale(2);
         map.set_vertical_scale(2);
@@ -53,14 +54,15 @@ namespace p {
 
         // bn::fixed max_cpu_usage;
         // int counter = 1;
-        bn::vector<PirataMalo, 32> enemigos = {};
-
+        bn::vector<Enemigo*, 32> enemigos = {};
+ 
         // player BN_LOG()
         //player.spawn(spawn_location, camera, map, enemies);
 
-        //enemigos.push_back(fe::Enemy(290, 169, camera, map, 2));
-        enemigos.push_back(PirataMalo(450, 204, camera, map, 2));
+        enemigos.push_back(new PirataMalo(450, 204, camera, map, 2));
+        enemigos.push_back(new PirataMalo2(460, 204, camera, map, 2));
         player.spawn(spawn_location, camera, map);
+
         while (true)
         {
 
@@ -84,24 +86,34 @@ namespace p {
                 }
             }
             tortoise.update();
-            
+
 */
-            for (PirataMalo& enemigo : enemigos) {
-                if (bn::abs(enemigo.pos().x() - camera.x()) < 200 && bn::abs(enemigo.pos().y() - camera.y()) < 100) {
-                    enemigo.update_position();
+            for (Enemigo* enemigo : enemigos) {
+                if (bn::abs(enemigo->pos().x() - camera.x()) < 200 && bn::abs(enemigo->pos().y() - camera.y()) < 100) {
+                    enemigo->update_position();
                 }
                 else {
-                    enemigo.set_visible(false);
+                    enemigo->set_visible(false);
                 }
             }
-//elevator.update_position();
+            //elevator.update_position();
             player.update_position(map, nivel);
             //player.apply_animation_state();
             // BN_LOG(bn::to_string<32>(player.pos().x())+" " + bn::to_string<32>(player.pos().y()));
 
+
+            //Reset
             if (bn::keypad::start_pressed()) {
+                
+                for (Enemigo* enemigo : enemigos) {
+                    delete enemigo;
+                }
                 return Escenas::CUEVA;
+                
             }
+            //Reset
+
+
             /*
             if(bn::keypad::up_pressed())
             {

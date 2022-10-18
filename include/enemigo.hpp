@@ -61,7 +61,7 @@ class Enemigo{
         bool damage_from_left(int damage);
         bool damage_from_right(int damage);
 
-        void update_position();
+        virtual void update_position();
         void update_position(bn::affine_bg_ptr map, fe::Level level);
         void animacionMuerte();
         void update();
