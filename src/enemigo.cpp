@@ -107,7 +107,8 @@ int Enemigo::hp() {
 
 bool Enemigo::is_hit(fe::Hitbox attack)
 {
-    return check_collisions_bb(attack, _pos.x(), _pos.y(), 16, 16);
+    //return check_collisions_bb(attack, _pos.x(), _pos.y(), 16, 16);
+    return check_collisions_bb(attack, fe::Hitbox( _pos.x(), _pos.y(), 16, 16));
 }
 
 bn::fixed_point Enemigo::pos() {

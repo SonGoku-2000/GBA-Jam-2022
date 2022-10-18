@@ -28,10 +28,10 @@ class Jugador {
         bool _grounded = false;
         bool _sliding = false;
         bool _already_running = false;
-        bool _attacking = false;
+        bool _atacando = false;
         bn::span<const bn::affine_bg_map_cell> _map_cells;
         bn::affine_bg_ptr _map;
-        bn::vector<Enemigo, 32>* _enemies;
+        bn::vector<Enemigo*, 32>* _enemies;
 
         fe::Hitbox _hitbox_fall = fe::Hitbox(0, 8, 4, 0);
         fe::Hitbox _hitbox_left = fe::Hitbox(-2, 0, 2, 4);
@@ -52,7 +52,7 @@ class Jugador {
         void update_position(bn::affine_bg_ptr map, fe::Level level);
         void update_position();
         void jump();
-        void ataque();
+        void atacar();
 
         void actualizarHitboxes(bn::fixed_point pos);
         
@@ -63,7 +63,7 @@ class Jugador {
         //void apply_animation_state();
         //void actualzarPosicion(bn::affine_bg_ptr map, fe::Level level);
 
-        void spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map, bn::vector<Enemigo, 32>& enemies);
+        void spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map, bn::vector<Enemigo*, 32>& enemies);
         void spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map);
         void reset();
         void collide_with_objects(bn::affine_bg_ptr map, fe::Level level);

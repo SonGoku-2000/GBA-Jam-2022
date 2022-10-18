@@ -61,7 +61,7 @@ namespace p {
 
         enemigos.push_back(new PirataMalo(450, 204, camera, map, 2));
         enemigos.push_back(new PirataMalo2(460, 204, camera, map, 2));
-        player.spawn(spawn_location, camera, map);
+        player.spawn(spawn_location, camera, map, enemigos);
 
         while (true)
         {

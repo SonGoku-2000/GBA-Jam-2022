@@ -169,8 +169,8 @@ void Jugador::collide_with_objects(bn::affine_bg_ptr map, fe::Level level) {
             //todo if they pressed jump a few milliseconds before hitting the ground then jump now
         }
     }
-    else if (_dy < 0){ // jumping
-    
+    else if (_dy < 0) { // jumping
+
         _jumping = false;
 
         /*
@@ -212,6 +212,35 @@ void Jugador::jump() {
     }
 }
 
+void Jugador::atacar() {
+    _atacando = true;
+}
+
+void Jugador::comprobarAtaque() {
+    //BN_LOG("cOMPROBANDO ATAQUE");
+    fe::Hitbox attack_hitbox = fe::Hitbox(_pos.x(), _pos.y(), 20, 20);
+    if (_sprite.horizontal_flip()) {
+        attack_hitbox.set_x(_pos.x() - 8);
+    }
+    else {
+        attack_hitbox.set_x(_pos.x() + 8);
+    }
+
+
+    for (int i = 0; i < _enemies->size(); i++) {
+        if (_enemies->at(i)->is_hit(attack_hitbox)) {
+            BN_LOG("Enemigo atacado");
+            if (_sprite.horizontal_flip()) {
+                _enemies->at(i)->damage_from_left(1);
+            }
+            else {
+                _enemies->at(i)->damage_from_right(1);
+            }
+
+        }
+    }
+}
+
 void Jugador::update_position(bn::affine_bg_ptr map, fe::Level level) {
     _update_camera(10);
 
@@ -229,14 +258,14 @@ void Jugador::update_position(bn::affine_bg_ptr map, fe::Level level) {
         moverDerecha();
     }
     else if (_running) { //slide to a stop
-    
+
         if (!_falling & !_jumping) {
             _sliding = true;
             _running = false;
         }
     }
     else if (_sliding) { //stop sliding
-    
+
         if (bn::abs(_dx) < 0.1 || _running) {
             _sliding = false;
         }
@@ -266,15 +295,15 @@ void Jugador::update_position(bn::affine_bg_ptr map, fe::Level level) {
         /*if (bn::keypad::a_pressed()) {
             jump();
         }*/
-        /*
-            // attack
-            if (bn::keypad::b_pressed()) {
-                attack();
-            }*/
 
-            //check_attack();
+        // attack
+    if (bn::keypad::b_pressed() || _atacando) {
+        atacar();
+        BN_LOG("Boton ataque");
+        comprobarAtaque();
+    }
 
-            // collide
+    // collide
     collide_with_objects(map, level);
 
     // update position
@@ -295,7 +324,7 @@ void Jugador::update_position(bn::affine_bg_ptr map, fe::Level level) {
         actualizarHitboxes(_pos);
     }
 
-// update sprite position
+    // update sprite position
     _sprite.set_x(_pos.x());
     _sprite.set_y(_pos.y());
 
@@ -382,7 +411,7 @@ void Jugador::update_position() {
 }
 */
 
-void Jugador::spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map, bn::vector<Enemigo, 32>& enemies) {
+void Jugador::spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map, bn::vector<Enemigo*, 32>& enemies) {
     _pos = pos;
     _hitbox_fall.mover(_pos);
     BN_LOG(_hitbox_fall.x());
@@ -424,6 +453,6 @@ void Jugador::reset() {
     _grounded = false;
     _sliding = false;
     _already_running = false;
-    _attacking = false;
+    _atacando = false;
 }
 
