@@ -5,6 +5,18 @@ This is the fist time writing since the inscription to the jam
 
 I'm trying to do a pirate adventure and don't know how to be the final game
 
+
+October 17
+
+I change some things of the code that i steal for feline to implement polymorphism, in some of the cases it throws an error until i change some that no idea whats touched, but is now working.
+
+It's near the final day of the jam and i need find a job, if this code isn't update since this or the next day is because the job.
+
+In a comment unrelated to the code, if you want to learn c++ and you speak or understand spanish, or you don't mind reading youtube subtitles, I recommend the channel "Devs' Den"
+
+
+
+
 October 16 
 
 I don't update since october 10, because emotional problems but i'm back.
