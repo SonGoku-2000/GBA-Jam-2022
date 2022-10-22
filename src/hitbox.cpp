@@ -21,6 +21,10 @@ namespace fe {
         set_x((_offsetX + pos.x()) / 2);
         set_y((_offsetY + pos.y()) / 2);
     }
+    void Hitbox::mover2(bn::fixed_point pos) {
+        set_x((_offsetX + pos.x()));
+        set_y((_offsetY + pos.y()));
+    }
 }
 
 /*

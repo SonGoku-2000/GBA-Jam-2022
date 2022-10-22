@@ -18,6 +18,7 @@ namespace fe {
             Hitbox();
             Hitbox(bn::fixed x, bn::fixed y, bn::fixed width, bn::fixed height);
             void mover(bn::fixed_point pos);
+            void mover2(bn::fixed_point pos);
             void setOffsetY(bn::fixed y);
             void setOffsetX(bn::fixed x);
     };

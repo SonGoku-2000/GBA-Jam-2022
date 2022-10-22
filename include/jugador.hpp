@@ -33,10 +33,11 @@ class Jugador {
         bn::affine_bg_ptr _map;
         bn::vector<Enemigo*, 32>* _enemies;
 
-        fe::Hitbox _hitbox_fall = fe::Hitbox(0, 8, 4, 0);
-        fe::Hitbox _hitbox_left = fe::Hitbox(-2, 0, 2, 4);
-        fe::Hitbox _hitbox_right = fe::Hitbox(2, 0, 2, 4);
-        fe::Hitbox _hitbox_jump = fe::Hitbox(0, 2, 4, 2);
+        fe::Hitbox _hitbox_fall = fe::Hitbox( 0,  8,  4,  0);
+        fe::Hitbox _hitbox_left = fe::Hitbox(-2,  0,  2,  4);
+        fe::Hitbox _hitbox_right = fe::Hitbox(2,  0,  2,  4);
+        fe::Hitbox _hitbox_jump = fe::Hitbox( 0,  2,  4,  2);
+        fe::Hitbox _hitbox_ataque = fe::Hitbox( 0,  0, 20, 20);
         /*bn::sprite_animate_action<10> _action = bn::create_sprite_animate_action_forever(
             _sprite, 6, bn::sprite_items::cat_sprite.tiles_item(), 0, 1, 0, 1, 0, 1, 0, 1, 0, 1);
         */
@@ -53,6 +54,11 @@ class Jugador {
         void update_position();
         void jump();
         void atacar();
+
+        bool isHorizontalFlip();
+        bool estaAtacando();
+
+        fe::Hitbox hitboxAtaque();
 
         void actualizarHitboxes(bn::fixed_point pos);
         

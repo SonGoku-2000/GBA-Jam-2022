@@ -24,6 +24,7 @@
 #include "enemigo.hpp"
 #include "pirata_malo.hpp"
 #include "otro_malo.hpp"
+#include "comprobar_ataque.hpp"
 
 //assets
 #include "bn_affine_bg_items_mapa.h"
@@ -59,7 +60,7 @@ namespace p {
         // player BN_LOG()
         //player.spawn(spawn_location, camera, map, enemies);
 
-        enemigos.push_back(new PirataMalo(450, 204, camera, map, 2));
+        enemigos.push_back(new PirataMalo(450, 180, camera, map, 2));
         enemigos.push_back(new PirataMalo2(460, 204, camera, map, 2));
         player.spawn(spawn_location, camera, map, enemigos);
 
@@ -98,6 +99,10 @@ namespace p {
             }
             //elevator.update_position();
             player.update_position(map, nivel);
+
+            if (player.estaAtacando()){
+                comprobarAtaque(player , enemigos, false);
+            }
             //player.apply_animation_state();
             // BN_LOG(bn::to_string<32>(player.pos().x())+" " + bn::to_string<32>(player.pos().y()));
 

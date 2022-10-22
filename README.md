@@ -15,8 +15,6 @@ It's near the final day of the jam and i need find a job, if this code isn't upd
 In a comment unrelated to the code, if you want to learn c++ and you speak or understand spanish, or you don't mind reading youtube subtitles, I recommend the channel "Devs' Den"
 
 
-
-
 October 16 
 
 I don't update since october 10, because emotional problems but i'm back.

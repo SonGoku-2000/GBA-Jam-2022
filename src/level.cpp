@@ -23,7 +23,10 @@ namespace fe
         
         while (!processed_map)
         {
-            //BN_LOG(cells.at(index));
+            if(debug){
+
+                BN_LOG("Tile number: " + cells.at(index));
+            }
             if(cells.at(index) == 0){
                 ++empties;
                 if(empties > 2){
@@ -43,6 +46,7 @@ namespace fe
         }
 
         if (debug){
+            BN_LOG("Flor Tiles");
             for (int tile : _floor_tiles) {
                 BN_LOG(tile);
             }

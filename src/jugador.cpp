@@ -216,8 +216,18 @@ void Jugador::atacar() {
     _atacando = true;
 }
 
+fe::Hitbox Jugador::hitboxAtaque() {
+    _hitbox_ataque.mover2(_pos);
+    return _hitbox_ataque;
+}
+
+bool Jugador::isHorizontalFlip(){
+    return _sprite.horizontal_flip();
+}
+
+/*
 void Jugador::comprobarAtaque() {
-    //BN_LOG("cOMPROBANDO ATAQUE");
+    //BN_LOG("COMPROBANDO ATAQUE");
     fe::Hitbox attack_hitbox = fe::Hitbox(_pos.x(), _pos.y(), 20, 20);
     if (_sprite.horizontal_flip()) {
         attack_hitbox.set_x(_pos.x() - 8);
@@ -239,6 +249,10 @@ void Jugador::comprobarAtaque() {
 
         }
     }
+}*/
+
+bool Jugador::estaAtacando(){
+    return _atacando;
 }
 
 void Jugador::update_position(bn::affine_bg_ptr map, fe::Level level) {
@@ -297,10 +311,11 @@ void Jugador::update_position(bn::affine_bg_ptr map, fe::Level level) {
         }*/
 
         // attack
-    if (bn::keypad::b_pressed() || _atacando) {
+    if (bn::keypad::b_pressed()) {
         atacar();
-        BN_LOG("Boton ataque");
-        comprobarAtaque();
+        BN_LOG("Boton ataque 1");
+
+        //comprobarAtaque();
     }
 
     // collide

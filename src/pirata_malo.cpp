@@ -4,7 +4,9 @@
 #include "bn_sprite_items_pirata2.h"
 #include "fe_extras.h"
 #include "hitbox.hpp"
+#include "bn_compare.h"
 #include "variables_globales.hpp"
+
 /*
 
 [[nodiscard]] int _get_map_cell(bn::fixed x, bn::fixed y, bn::affine_bg_ptr& map, bn::span<const bn::affine_bg_map_cell> cells)
@@ -72,16 +74,14 @@ PirataMalo::PirataMalo(int x, int y, bn::camera_ptr camera, bn::affine_bg_ptr ma
         _sprite.value(), 4, bn::sprite_items::pirata2.tiles_item(), 0, 1, 0, 1);*/
 }
 
-void PirataMalo::update_position(){
+void PirataMalo::update_position() {
     //apply gravity
     _dy += gravity;
-
 
     _pos.set_x(_pos.x() + _dx);
     _pos.set_y(_pos.y() + _dy);
 
     _sprite.value().set_position(_pos);
-    
 
     if (_dy > 0) {
         fe::Hitbox hbCaida = fe::Hitbox(0, 8, 8, 0);
@@ -149,32 +149,32 @@ void PirataMalo::update_position(bn::affine_bg_ptr map, fe::Level level) {
         jump();
     }
     */
-   /*
-    // collide
-    collide_with_objects(map, level);
+    /*
+     // collide
+     collide_with_objects(map, level);
 
-    // update position
-    _pos.set_x(_pos.x() + _dx);
-    _pos.set_y(_pos.y() + _dy);
+     // update position
+     _pos.set_x(_pos.x() + _dx);
+     _pos.set_y(_pos.y() + _dy);
 
-    //_hitbox_fall.set_position(_pos);
-    actualizarHitboxes(_pos);
-    //_hitbox_fall.mover(_pos);
+     //_hitbox_fall.set_position(_pos);
+     actualizarHitboxes(_pos);
+     //_hitbox_fall.mover(_pos);
 
-    // lock player position to map limits x
-    if (_pos.x() > 1016) {
-        _pos.set_x(1016);
-        actualizarHitboxes(_pos);
-    }
-    else if (_pos.x() < 4) {
-        _pos.set_x(4);
-        actualizarHitboxes(_pos);
-    }
+     // lock player position to map limits x
+     if (_pos.x() > 1016) {
+         _pos.set_x(1016);
+         actualizarHitboxes(_pos);
+     }
+     else if (_pos.x() < 4) {
+         _pos.set_x(4);
+         actualizarHitboxes(_pos);
+     }
 
-    // update sprite position
-    _sprite.set_x(_pos.x());
-    _sprite.set_y(_pos.y());
-    */
+     // update sprite position
+     _sprite.set_x(_pos.x());
+     _sprite.set_y(_pos.y());
+     */
 
 }
 
