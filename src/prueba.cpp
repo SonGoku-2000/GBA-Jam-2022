@@ -1,4 +1,4 @@
-#include "prueba.hpp"
+/*#include "prueba.hpp"
 
 #include "fe_enemy_type.h"
 #include "hitbox.hpp"
@@ -138,7 +138,7 @@ namespace fe
     bool Enemy::is_hit(Hitbox attack)
     {
         if (!_dead) {
-            return check_collisions_bb(attack, _pos.x(), _pos.y(), 8, 8);
+            return check_collisions_bb(attack, Hitbox(_pos.x(), _pos.y(), 8, 8));
         }
         else {
             return false;
@@ -222,28 +222,27 @@ namespace fe
                     _dx += _dir * acc;
                 }
             }
-            else
-                if (_type == ENEMY_TYPE::BAT) {
-                    if (_direction_timer > 60) {
-                        if (_will_hit_wall()) {
-                            _dx = 0;
-                            _dir = -_dir;
-                            _direction_timer = 0;
-                            _sprite.value().set_horizontal_flip(!_sprite.value().horizontal_flip());
-                        }
-                    }
-                    if (!_invulnerable) {
-                        _dx += _dir * acc;
+            else if (_type == ENEMY_TYPE::BAT) {
+                if (_direction_timer > 60) {
+                    if (_will_hit_wall()) {
+                        _dx = 0;
+                        _dir = -_dir;
+                        _direction_timer = 0;
+                        _sprite.value().set_horizontal_flip(!_sprite.value().horizontal_flip());
                     }
                 }
+                if (!_invulnerable) {
+                    _dx += _dir * acc;
+                }
+            }
 
             _dx = _dx * friction;
 
             //fall
             if (_dy > 0) {
                 if (_check_collisions_map(_pos, Hitbox(0, 8, 8, 0), directions::down, _map, _level, _map_cells)) {
-                    _dy = 0;
                     // BN_LOG(bn::to_string<32>(_pos.x())+" " + bn::to_string<32>(_pos.y()));
+                    _dy = 0;
                     _pos.set_y(_pos.y() - modulo(_pos.y(), 8));
                     _grounded = true;
                 }
@@ -278,4 +277,4 @@ namespace fe
             }
         }
     }
-}
+}*/

@@ -45,12 +45,12 @@ class Enemigo{
         bn::affine_bg_ptr _map;
         fe::Level _level;
 
-        bool _recibirDano(int dano);
+        void _recibirDano(int dano);
         bool _will_fall_or_hit_wall();
 
         [[nodiscard]] int _get_map_cell(bn::fixed x, bn::fixed y, bn::affine_bg_ptr& map, bn::span<const bn::affine_bg_map_cell> cells);
         [[nodiscard]] bool _contains_cell(int tile, bn::vector<int, 32> tiles);
-        [[nodiscard]] bool _check_collisions_map(bn::fixed_point pos, fe::Hitbox hitbox, direcciones direccion, bn::affine_bg_ptr& map, fe::Level level, bn::span<const bn::affine_bg_map_cell> cells);
+        [[nodiscard]] bool _check_collisions_map(fe::Hitbox hitbox, direcciones direccion, bn::affine_bg_ptr& map, fe::Level level, bn::span<const bn::affine_bg_map_cell> cells);
     public:
         Enemigo(int x, int y, bn::camera_ptr camera, bn::affine_bg_ptr map, int hp);
         
@@ -58,8 +58,8 @@ class Enemigo{
         int hp(); 
 
         bool is_hit(fe::Hitbox attack);
-        bool damage_from_left(int damage);
-        bool damage_from_right(int damage);
+        void damage_from_left(int damage);
+        void damage_from_right(int damage);
 
         virtual void update_position();
         void update_position(bn::affine_bg_ptr map, fe::Level level);

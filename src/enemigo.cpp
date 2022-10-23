@@ -36,7 +36,7 @@
     return false;
 }
 
-[[nodiscard]] bool Enemigo::_check_collisions_map(bn::fixed_point pos, fe::Hitbox hitbox, direcciones direccion, bn::affine_bg_ptr& map, fe::Level level, bn::span<const bn::affine_bg_map_cell> cells) {
+[[nodiscard]] bool Enemigo::_check_collisions_map(fe::Hitbox hitbox, direcciones direccion, bn::affine_bg_ptr& map, fe::Level level, bn::span<const bn::affine_bg_map_cell> cells) {
 
     bn::fixed l = hitbox.left();
     bn::fixed r = hitbox.right();
@@ -107,46 +107,45 @@ int Enemigo::hp() {
 
 bool Enemigo::is_hit(fe::Hitbox attack)
 {
-    //return check_collisions_bb(attack, _pos.x(), _pos.y(), 16, 16);
-    return check_collisions_bb(attack, fe::Hitbox( _pos.x(), _pos.y(), 16, 16));
+    fe::Hitbox hitbox = fe::Hitbox(_pos.x(), _pos.y(), 16, 16);
+    return check_collisions_bb(attack, hitbox, false); 
 }
 
 bn::fixed_point Enemigo::pos() {
     return _pos;
 }
 
-bool Enemigo::_recibirDano(int dano) {
+void Enemigo::_recibirDano(int dano) {
     if (_invulnerable) {
-        return false;
+        return;
     }
 
     _hp -= dano;
     _invulnerable = true;
     if (_hp <= 0) {
-
         animacionMuerte();
         _dead = true;
-        return true;
     }
-    return false;
+    
+    _dx = _dx * friction;
 }
 
 void Enemigo::animacionMuerte(){
 
 }
 
-bool Enemigo::damage_from_left(int damage) {
+void Enemigo::damage_from_left(int damage) {
     _dy -= 0.5;
     _dx -= 1;
     _grounded = false;
-    return _recibirDano(damage);
+    _recibirDano(damage);
 }
 
-bool Enemigo::damage_from_right(int damage) {
+void Enemigo::damage_from_right(int damage) {
     _dy -= 0.5;
     _dx += 1;
     _grounded = false;
-    return _recibirDano(damage);
+    _recibirDano(damage);
 }
 
 void Enemigo::set_visible(bool visiblity) {
@@ -164,7 +163,6 @@ void Enemigo::update_position(bn::affine_bg_ptr map, fe::Level level){
 
 
 /*
-
 bool Enemy::_will_fall_or_hit_wall()
 {
 

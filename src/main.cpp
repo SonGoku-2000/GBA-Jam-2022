@@ -5,6 +5,9 @@
 
 #include "jugador.hpp"
 #include "escenaCueva.hpp"
+
+#include "colision.hpp"
+#include "fe_extras.h"
 //#include "fe_house_scene.h"
 
 int main() {

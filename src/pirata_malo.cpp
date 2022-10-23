@@ -76,6 +76,7 @@ PirataMalo::PirataMalo(int x, int y, bn::camera_ptr camera, bn::affine_bg_ptr ma
 
 void PirataMalo::update_position() {
     //apply gravity
+    _dx = _dx * friction;
     _dy += gravity;
 
     _pos.set_x(_pos.x() + _dx);
@@ -86,7 +87,7 @@ void PirataMalo::update_position() {
     if (_dy > 0) {
         fe::Hitbox hbCaida = fe::Hitbox(0, 8, 8, 0);
         hbCaida.mover(_pos);
-        if (_check_collisions_map(_pos, hbCaida, direcciones::down, _map, _level, _map_cells)) {
+        if (_check_collisions_map( hbCaida, direcciones::down, _map, _level, _map_cells)) {
             _dy = 0;
             // BN_LOG(bn::to_string<32>(_pos.x())+" " + bn::to_string<32>(_pos.y()));
             _pos.set_y(_pos.y() - fe::modulo(_pos.y(), 8));
@@ -112,7 +113,7 @@ void PirataMalo::update_position(bn::affine_bg_ptr map, fe::Level level) {
     _sprite.value().set_position(_pos);
 
     if (_dy > 0) {
-        if (_check_collisions_map(_pos, fe::Hitbox(0, 8, 8, 0), direcciones::down, _map, _level, _map_cells)) {
+        if (_check_collisions_map( fe::Hitbox(0, 8, 8, 0), direcciones::down, _map, _level, _map_cells)) {
             _dy = 0;
             // BN_LOG(bn::to_string<32>(_pos.x())+" " + bn::to_string<32>(_pos.y()));
             _pos.set_y(_pos.y() - fe::modulo(_pos.y(), 8));
