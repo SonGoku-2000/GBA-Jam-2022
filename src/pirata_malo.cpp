@@ -6,7 +6,7 @@
 #include "hitbox.hpp"
 #include "bn_compare.h"
 #include "variables_globales.hpp"
-
+#include "bn_math.h"
 /*
 
 [[nodiscard]] int _get_map_cell(bn::fixed x, bn::fixed y, bn::affine_bg_ptr& map, bn::span<const bn::affine_bg_map_cell> cells)
@@ -75,14 +75,21 @@ PirataMalo::PirataMalo(int x, int y, bn::camera_ptr camera, bn::affine_bg_ptr ma
 }
 
 void PirataMalo::update_position() {
+    if (_dead){
+        _sprite.value().set_visible(false);
+        return;
+    }
+
+    if (_invulnerable) {
+        ++_inv_timer;
+        if (_inv_timer > 20) {
+            _inv_timer = 0;
+            _invulnerable = false;
+        }
+    }
     //apply gravity
     _dx = _dx * friction;
     _dy += gravity;
-
-    _pos.set_x(_pos.x() + _dx);
-    _pos.set_y(_pos.y() + _dy);
-
-    _sprite.value().set_position(_pos);
 
     if (_dy > 0) {
         fe::Hitbox hbCaida = fe::Hitbox(0, 8, 8, 0);
@@ -98,9 +105,30 @@ void PirataMalo::update_position() {
         }
     }
 
+    if (bn::abs(_dx) > 0) {
+        if (_check_collisions_map(fe::Hitbox(0, 0, 4, 8), direcciones::left, _map, _level, _map_cells) ||
+            _check_collisions_map(fe::Hitbox(0, 0, 4, 8), direcciones::right, _map, _level, _map_cells)) {
+            _dx = -_dx;
+            _direction_timer = 0;
+        }
+    }
+
+    if (_dy > max_dy) {
+        _dy = max_dy;
+    }
+
+    _pos.set_x(_pos.x() + _dx);
+    _pos.set_y(_pos.y() + _dy);
+
+    _sprite.value().set_position(_pos);
+    
+    /*if (!_action.value().done()) {
+        _action.value().update();
+    }*/
+
 }
 
-void PirataMalo::update_position(bn::affine_bg_ptr map, fe::Level level) {
+/*void PirataMalo::update_position(bn::affine_bg_ptr map, fe::Level level) {
     // apply friction
     //_dx = _dx * friction;
 //apply gravity
@@ -175,8 +203,8 @@ void PirataMalo::update_position(bn::affine_bg_ptr map, fe::Level level) {
      // update sprite position
      _sprite.set_x(_pos.x());
      _sprite.set_y(_pos.y());
-     */
+     
 
-}
+}*/
 
 

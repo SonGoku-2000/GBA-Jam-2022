@@ -1,5 +1,4 @@
-/*#include "prueba.hpp"
-
+#include "fe_enemy.h"
 #include "fe_enemy_type.h"
 #include "hitbox.hpp"
 #include "colision.hpp"
@@ -12,6 +11,8 @@
 #include "bn_sprite_items_bat_sprite.h"
 #include "bn_sprite_items_slime_sprite.h"
 #include "bn_affine_bg_map_ptr.h"
+
+
 namespace fe
 {
     enum directions { up, down, left, right };
@@ -71,7 +72,7 @@ namespace fe
     constexpr const bn::fixed max_dy = 6;
     constexpr const bn::fixed friction = 0.85;
 
-    Enemy::Enemy(int x, int y, bn::camera_ptr camera, bn::affine_bg_ptr map, fe::ENEMY_TYPE type, int hp) :
+    Enemy::Enemy(int x, int y, bn::camera_ptr camera, bn::affine_bg_ptr map, ENEMY_TYPE type, int hp) :
         _pos(x, y), _camera(camera), _type(type), _hp(hp), _map(map), _level(Level(map))
     {
         _map_cells = map.map().cells_ref().value();
@@ -79,7 +80,7 @@ namespace fe
 
         if (_type == ENEMY_TYPE::BAT)
         {
-
+            _sprite = bn::sprite_items::bat_sprite.create_sprite(_pos.x(), _pos.y());
             _sprite.value().set_camera(_camera);
             _sprite.value().set_bg_priority(1);
             _action = bn::create_sprite_animate_action_forever(
@@ -92,7 +93,6 @@ namespace fe
             _action = bn::create_sprite_animate_action_forever(
                 _sprite.value(), 20, bn::sprite_items::slime_sprite.tiles_item(), 0, 1, 0, 1);
         }
-        _sprite.value().set_visible(true);
     }
 
     void Enemy::set_visible(bool visiblity) {
@@ -148,11 +148,21 @@ namespace fe
     bool Enemy::_will_hit_wall()
     {
 
-        if (_check_collisions_map(_pos, Hitbox(-4, 0, 12, 12), directions::left, _map, _level, _map_cells)) {
-            return true;
+        if (_dx < 0) { // left
+            if (!_check_collisions_map(_pos, Hitbox(-4, 8, 4, 8), directions::down, _map, _level, _map_cells)) {
+                return true;
+            }
+            if (_check_collisions_map(_pos, Hitbox(-4, 4, 8, 8), directions::right, _map, _level, _map_cells)) {
+                return true;
+            }
         }
-        if (_check_collisions_map(_pos, Hitbox(10, 0, 12, 12), directions::right, _map, _level, _map_cells)) {
-            return true;
+        else { //right
+            if (!_check_collisions_map(_pos, Hitbox(4, 8, 4, 8), directions::down, _map, _level, _map_cells)) {
+                return true;
+            }
+            if (_check_collisions_map(_pos, Hitbox(4, 4, 8, 8), directions::right, _map, _level, _map_cells)) {
+                return true;
+            }
         }
         return false;
     }
@@ -182,13 +192,12 @@ namespace fe
     void Enemy::update() {
         if (!_dead)
         {
-            return;
             if (!_sprite.value().visible())
             {
                 _sprite.value().set_visible(true);
             }
 
-            // dead check
+            //dead check
             if (_action.value().done()) {
                 _sprite.value().set_visible(false);
                 _dead = true;
@@ -202,6 +211,13 @@ namespace fe
                 }
             }
 
+            if (_direction_timer > 200) {
+                // do nothing
+            }
+            else {
+                ++_direction_timer;
+            }
+
             //apply gravity
             if (_type != ENEMY_TYPE::BAT)
             {
@@ -209,9 +225,8 @@ namespace fe
             }
 
             if (_type == ENEMY_TYPE::SLIME) {
-                if (!_invulnerable && _grounded && _direction_timer > 30) {
+                if (!_invulnerable && _grounded && _direction_timer > 60) {
                     if (_will_fall() || _will_hit_wall()) {
-
                         _dx = 0;
                         _dir = -_dir;
                         _direction_timer = 0;
@@ -238,11 +253,10 @@ namespace fe
 
             _dx = _dx * friction;
 
-            //fall
             if (_dy > 0) {
                 if (_check_collisions_map(_pos, Hitbox(0, 8, 8, 0), directions::down, _map, _level, _map_cells)) {
-                    // BN_LOG(bn::to_string<32>(_pos.x())+" " + bn::to_string<32>(_pos.y()));
                     _dy = 0;
+                    // BN_LOG(bn::to_string<32>(_pos.x())+" " + bn::to_string<32>(_pos.y()));
                     _pos.set_y(_pos.y() - modulo(_pos.y(), 8));
                     _grounded = true;
                 }
@@ -251,11 +265,11 @@ namespace fe
                 }
             }
 
-            //bounce?
             if (bn::abs(_dx) > 0) {
-                if (_check_collisions_map(_pos, Hitbox(0, 0, 4, 8), directions::left, _map, _level, _map_cells)) {
+                if (_check_collisions_map(_pos, Hitbox(0, 0, 4, 8), directions::left, _map, _level, _map_cells) ||
+                    _check_collisions_map(_pos, Hitbox(0, 0, 4, 8), directions::left, _map, _level, _map_cells)) {
                     _dx = -_dx;
-                    // _direction_timer = 0;
+                    _direction_timer = 0;
                 }
             }
 
@@ -271,10 +285,6 @@ namespace fe
             if (!_action.value().done()) {
                 _action.value().update();
             }
-
-            if (_direction_timer < 121) {
-                _direction_timer += 1;
-            }
         }
     }
-}*/
+}

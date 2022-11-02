@@ -25,7 +25,8 @@ namespace fe
         {
             if(debug){
 
-                BN_LOG("Tile number: " + cells.at(index));
+                BN_LOG("Tile number: ");
+                BN_LOG(cells.at(index));
             }
             if(cells.at(index) == 0){
                 ++empties;

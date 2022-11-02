@@ -4,7 +4,7 @@
 void comprobarAtaque(Jugador &jugador, bn::vector<Enemigo*, 32> &enemigos, bool debug = false) {
     fe::Hitbox hitbox = jugador.hitboxAtaque();
 
-    if (jugador.isHorizontalFlip()) {
+    if (jugador.direccion() == direcciones::left) {
         hitbox.set_x(hitbox.x() - 8);
     }
     else {
@@ -15,10 +15,9 @@ void comprobarAtaque(Jugador &jugador, bn::vector<Enemigo*, 32> &enemigos, bool 
     for (int i = 0; i < enemigos.size(); i++) {
         if (enemigos.at(i)->is_hit(hitbox)) {
             if (debug) {
-
                 BN_LOG("Enemigo atacado");
             }
-            if (jugador.isHorizontalFlip()) {
+            if (jugador.direccion() == direcciones::left) {
                 enemigos.at(i)->damage_from_left(1);
             }
             else {

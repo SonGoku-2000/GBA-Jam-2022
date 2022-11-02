@@ -92,6 +92,7 @@ Jugador::Jugador() :
 }
 
 void Jugador::moverDerecha() {
+    _direccion = direcciones::right;
     _sprite.set_horizontal_flip(false);
     _dx += acc;
     _running = true;
@@ -99,10 +100,15 @@ void Jugador::moverDerecha() {
 }
 
 void Jugador::moverIzquierda() {
+    _direccion = direcciones::left;
     _sprite.set_horizontal_flip(true);
     _dx -= acc;
     _running = true;
     _sliding = false;
+}
+
+direcciones Jugador::direccion(){
+    return _direccion;
 }
 
 void Jugador::_update_camera(int lerp) {
@@ -426,7 +432,7 @@ void Jugador::update_position() {
 }
 */
 
-void Jugador::spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map, bn::vector<Enemigo*, 32>& enemies) {
+/*void Jugador::spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map, bn::vector<Enemigo*, 32>& enemies) {
     _pos = pos;
     _hitbox_fall.mover(_pos);
     BN_LOG(_hitbox_fall.x());
@@ -438,7 +444,7 @@ void Jugador::spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_pt
     _map.set_visible(true);
 
     reset();
-}
+}*/
 
 void Jugador::spawn(bn::fixed_point pos, bn::camera_ptr camera, bn::affine_bg_ptr map) {
     _pos = pos;

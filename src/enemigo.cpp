@@ -136,14 +136,14 @@ void Enemigo::animacionMuerte(){
 
 void Enemigo::damage_from_left(int damage) {
     _dy -= 0.5;
-    _dx -= 1;
+    _dx += 1;
     _grounded = false;
     _recibirDano(damage);
 }
 
 void Enemigo::damage_from_right(int damage) {
     _dy -= 0.5;
-    _dx += 1;
+    _dx -= 1;
     _grounded = false;
     _recibirDano(damage);
 }

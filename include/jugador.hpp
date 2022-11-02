@@ -31,7 +31,8 @@ class Jugador {
         bool _atacando = false;
         bn::span<const bn::affine_bg_map_cell> _map_cells;
         bn::affine_bg_ptr _map;
-        bn::vector<Enemigo*, 32>* _enemies;
+        direcciones _direccion = direcciones::right;
+        //bn::vector<Enemigo*, 32>* _enemies;
 
         fe::Hitbox _hitbox_fall = fe::Hitbox( 0,  8,  4,  0);
         fe::Hitbox _hitbox_left = fe::Hitbox(-2,  0,  2,  4);
@@ -54,6 +55,7 @@ class Jugador {
         void update_position();
         void jump();
         void atacar();
+        direcciones direccion(); 
 
         bool isHorizontalFlip();
         bool estaAtacando();
